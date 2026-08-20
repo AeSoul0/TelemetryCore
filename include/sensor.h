@@ -1,20 +1,26 @@
+/**
+ * include/sensor.h
+ * * Architecture Layer: Domain / Sensor Abstraction
+ * Responsibility: Defines the abstract interface for temperature sensors and provides a simulated implementation for testing.
+ */
+
 #pragma once
 #include <cstdint>
 
-// FASE 3.1: Concetto di misura
+// Phase 3.1: Measurement concept
 struct SensorReading {
     uint32_t timestamp;
     float temperature;
 };
 
-// FASE 3.2: Interfaccia del sensore
+// Phase 3.2: Sensor interface
 class TemperatureSensor {
 public:
     virtual ~TemperatureSensor() = default;
     virtual float readTemperature() = 0;
 };
 
-// FASE 3.3: Mock Sensor
+// Phase 3.3: Mock Sensor
 class MockTemperatureSensor : public TemperatureSensor {
 private:
     float baseTemp = 23.4f;

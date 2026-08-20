@@ -1,16 +1,22 @@
+/**
+ * include/telemetry.h
+ * * Architecture Layer: Domain / Processing
+ * Responsibility: Defines the telemetry data model and the processor interface that evaluates sensor readings.
+ */
+
 #pragma once
 #include <cstdint>
 #include <string>
 #include "sensor.h"
 
-// FASE 4.2: Stato del sistema
+// Phase 4.2: System status
 enum class SystemStatus : uint8_t {
     OK,
     WARNING,
     CRITICAL
 };
 
-// FASE 4.1: Packet di telemetria
+// Phase 4.1: Telemetry packet
 struct TelemetryPacket {
     uint32_t timestamp;
     float temperature;
@@ -19,15 +25,15 @@ struct TelemetryPacket {
     SystemStatus status;
 };
 
-// FASE 5.2 & 5.3: Processing and Telemetry
+// Phase 5.2 & 5.3: Processing and Telemetry
 class TelemetryProcessor {
 public:
-    // FASE 4.3: Regole
+    // Phase 4.3: Rules
     SystemStatus calculateStatus(float temperature) const;
     
-    // Acquisisce da reading e produce packet
+    // Acquires from reading and produces packet
     TelemetryPacket process(const SensorReading& reading) const;
     
-    // FASE 4.4: Serialization
+    // Phase 4.4: Serialization
     std::string serialize(const TelemetryPacket& packet) const;
 };

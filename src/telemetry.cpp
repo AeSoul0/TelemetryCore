@@ -1,3 +1,8 @@
+/**
+ * src/telemetry.cpp
+ * * Architecture Layer: Domain / Processing Implementation
+ * Responsibility: Implements the processing logic to evaluate sensor data and serialize telemetry packets.
+ */
 #include "telemetry.h"
 #include <sstream>
 #include <iomanip>
@@ -12,8 +17,8 @@ TelemetryPacket TelemetryProcessor::process(const SensorReading& reading) const 
     TelemetryPacket packet;
     packet.timestamp = reading.timestamp;
     packet.temperature = reading.temperature;
-    packet.pressure = 1013.25f; // Simulata (valore standard in hPa)
-    packet.battery = 95.0f;     // Simulata (percentuale)
+    packet.pressure = 1013.25f; // Simulated (standard value in hPa)
+    packet.battery = 95.0f;     // Simulated (percentage)
     packet.status = calculateStatus(reading.temperature);
     return packet;
 }
