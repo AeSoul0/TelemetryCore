@@ -1,0 +1,15 @@
+# Build and artifact directories
+build/
+cmake-build-*/
+out/
+bin/
+lib/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+
+# Project specific files to ignore
+roadmap.md
+session_log.md
