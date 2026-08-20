@@ -30,16 +30,24 @@ namespace RTOS {
         std::mutex mtx;
         std::condition_variable cv;
         bool count = false;
+        bool stopped = false;
     public:
         void give() {
             std::lock_guard<std::mutex> lock(mtx);
             count = true;
             cv.notify_one();
         }
-        void take() {
+        ErrorCode take() {
             std::unique_lock<std::mutex> lock(mtx);
-            cv.wait(lock, [this]() { return count; });
+            cv.wait(lock, [this]() { return count || stopped; });
+            if (stopped) return ErrorCode::SYSTEM_SHUTDOWN;
             count = false;
+            return ErrorCode::OK;
+        }
+        void abort() {
+            std::lock_guard<std::mutex> lock(mtx);
+            stopped = true;
+            cv.notify_all();
         }
     };
 
@@ -51,11 +59,13 @@ namespace RTOS {
         std::mutex mtx;
         std::condition_variable cv;
         size_t maxSize;
+        bool stopped = false;
     public:
         Queue(size_t max_size = 10) : maxSize(max_size) {}
         
         ErrorCode send(const T& item) {
             std::lock_guard<std::mutex> lock(mtx);
+            if (stopped) return ErrorCode::SYSTEM_SHUTDOWN;
             if (q.size() >= maxSize) {
                 return ErrorCode::QUEUE_FULL;
             }
@@ -64,11 +74,19 @@ namespace RTOS {
             return ErrorCode::OK;
         }
 
-        void receive(T& item) {
+        ErrorCode receive(T& item) {
             std::unique_lock<std::mutex> lock(mtx);
-            cv.wait(lock, [this]() { return !q.empty(); });
+            cv.wait(lock, [this]() { return !q.empty() || stopped; });
+            if (stopped) return ErrorCode::SYSTEM_SHUTDOWN;
             item = q.front();
             q.pop();
+            return ErrorCode::OK;
+        }
+        
+        void abort() {
+            std::lock_guard<std::mutex> lock(mtx);
+            stopped = true;
+            cv.notify_all();
         }
     };
 

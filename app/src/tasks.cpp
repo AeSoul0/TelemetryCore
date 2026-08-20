@@ -26,7 +26,8 @@ TelemetryProcessor telemetryProcessor;
 std::unique_ptr<RTOS::Task> sensorTaskPtr;
 std::unique_ptr<RTOS::Task> processingTaskPtr;
 std::unique_ptr<RTOS::Task> commTaskPtr;
-std::unique_ptr<RTOS::Task> isrTaskPtr; // Interrupt simulation
+std::unique_ptr<RTOS::Task> isrTaskPtr;
+std::unique_ptr<RTOS::Task> eventHandlerTaskPtr;
 
 // Semaphore for Interrupt simulation
 RTOS::Semaphore eventSemaphore;
@@ -41,6 +42,7 @@ void sensorTaskFn() {
     
     // Send to queue
     ErrorCode err = sensorQueue.send(reading);
+    if (err == ErrorCode::SYSTEM_SHUTDOWN) return;
     if (err == ErrorCode::QUEUE_FULL) {
         LOG_ERROR("SensorTask", "Queue 1 Full! Dropping reading.");
     }
@@ -53,11 +55,12 @@ void sensorTaskFn() {
 void processingTaskFn() {
     SensorReading reading;
     // Block until data is available
-    sensorQueue.receive(reading);
+    if (sensorQueue.receive(reading) == ErrorCode::SYSTEM_SHUTDOWN) return;
     
     TelemetryPacket packet = telemetryProcessor.process(reading);
     
     ErrorCode err = telemetryQueue.send(packet);
+    if (err == ErrorCode::SYSTEM_SHUTDOWN) return;
     if (err == ErrorCode::QUEUE_FULL) {
         LOG_ERROR("ProcTask", "Queue 2 Full! Dropping packet.");
     }
@@ -67,7 +70,7 @@ void processingTaskFn() {
 void commTaskFn() {
     TelemetryPacket packet;
     // Block until data is available
-    telemetryQueue.receive(packet);
+    if (telemetryQueue.receive(packet) == ErrorCode::SYSTEM_SHUTDOWN) return;
     
     std::string serialized = telemetryProcessor.serialize(packet);
     
@@ -85,13 +88,11 @@ void isrSimulationFn() {
 
 // Event Handler Task (woken up by Semaphore)
 void eventHandlerTaskFn() {
-    eventSemaphore.take();
+    if (eventSemaphore.take() == ErrorCode::SYSTEM_SHUTDOWN) return;
     uartMutex.lock();
     LOG_DEBUG("ISR_Handler", "Hardware interrupt triggered!");
     uartMutex.unlock();
 }
-
-std::unique_ptr<RTOS::Task> eventHandlerTaskPtr;
 
 namespace AppTasks {
     void startTasks() {
@@ -111,6 +112,11 @@ namespace AppTasks {
     }
     
     void stopTasks() {
+        // Wake up all blocked primitives so tasks can exit gracefully
+        sensorQueue.abort();
+        telemetryQueue.abort();
+        eventSemaphore.abort();
+        
         sensorTaskPtr->stop();
         processingTaskPtr->stop();
         commTaskPtr->stop();

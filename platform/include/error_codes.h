@@ -14,5 +14,6 @@ enum class ErrorCode : uint8_t {
     INVALID_DATA,
     QUEUE_FULL,
     SYSTEM_WARNING,
-    SYSTEM_CRITICAL
+    SYSTEM_CRITICAL,
+    SYSTEM_SHUTDOWN
 };

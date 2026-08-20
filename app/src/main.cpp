@@ -6,7 +6,6 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include <cstdlib>
 #include "tasks.h"
 #include "logger.h"
 
@@ -22,8 +21,9 @@ int main() {
 
     LOG_INFO("Main", "Shutting down system...");
     
-    // In an actual embedded system, the OS never stops.
-    // For this PC simulation, we forcibly exit to avoid joining blocking queues.
+    // Stop all tasks gracefully
+    AppTasks::stopTasks();
+    
     std::cout << "Test successfully completed.\n";
-    std::exit(0);
+    return 0;
 }
