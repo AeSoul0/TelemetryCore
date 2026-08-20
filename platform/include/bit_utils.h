@@ -6,7 +6,7 @@
 #pragma once
 #include <cstdint>
 
-// Phase 2: Bit manipulation
+// Bit manipulation
 namespace BitUtils {
     inline void setBit(uint8_t& reg, uint8_t bit) { reg |= (1 << bit); }
     inline void clearBit(uint8_t& reg, uint8_t bit) { reg &= ~(1 << bit); }

@@ -6,7 +6,7 @@
 #pragma once
 #include <cstdint>
 
-// Phase 16: Error handling
+// Error handling
 enum class ErrorCode : uint8_t {
     OK = 0,
     SENSOR_ERROR,

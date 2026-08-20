@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-// Phase 17: Logging
+// Logging
 namespace Logger {
     enum class Level {
         DEBUG,
@@ -17,7 +17,7 @@ namespace Logger {
     };
 
     inline void log(Level level, const std::string& component, const std::string& message) {
-        // Phase 14: In a real RTOS, this std::cout must be protected by a Mutex!
+        // In a real RTOS, this std::cout must be protected by a Mutex!
         // We will add the Mutex protection when we implement the RTOS simulation layer.
         switch(level) {
             case Level::DEBUG: std::cout << "[DEBUG]"; break;

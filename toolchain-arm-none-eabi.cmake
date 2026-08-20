@@ -1,4 +1,4 @@
-# Phase 22: Cross-compilation (ARM toolchain)
+# Cross-compilation (ARM toolchain)
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 

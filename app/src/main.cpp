@@ -11,7 +11,7 @@
 #include "logger.h"
 
 int main() {
-    std::cout << "=== Embedded Telemetry Simulator (Phases 7-22) ===\n";
+    std::cout << "=== Embedded Telemetry Simulator ===\n";
     LOG_INFO("Main", "Initializing system...");
 
     // Start all simulated RTOS tasks

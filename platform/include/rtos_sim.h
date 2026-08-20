@@ -15,7 +15,7 @@
 
 namespace RTOS {
 
-    // Phase 14: Mutex
+    // Mutex
     class Mutex {
     private:
         std::mutex mtx;
@@ -24,7 +24,7 @@ namespace RTOS {
         void unlock() { mtx.unlock(); }
     };
 
-    // Phase 15: Semaphore
+    // Semaphore
     class Semaphore {
     private:
         std::mutex mtx;
@@ -43,7 +43,7 @@ namespace RTOS {
         }
     };
 
-    // Phase 9: Queue
+    // Queue
     template<typename T>
     class Queue {
     private:
@@ -72,7 +72,7 @@ namespace RTOS {
         }
     };
 
-    // Phase 7: Task
+    // Task
     class Task {
     private:
         std::thread worker;

@@ -4,7 +4,7 @@ project(EmbeddedTelemetry CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Phase 19: Static Analysis and Quality (Compiler Warnings)
+# Static Analysis and Quality (Compiler Warnings)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -35,5 +35,5 @@ add_executable(embedded_telemetry
     ${DRIVER_SOURCES}
 )
 
-# Optional Phase 18 setup for multi-config (Debug/Release)
+# Optional setup for multi-config (Debug/Release)
 # Usually managed via `cmake --build . --config Release`

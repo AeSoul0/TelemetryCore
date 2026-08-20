@@ -5,7 +5,7 @@
  */
 #include "sensor.h"
 
-// Phase 3.3 and 3.4: Mock implementation with anomalies
+// and 3.4: Mock implementation with anomalies
 float MockTemperatureSensor::readTemperature() {
     tick++;
     
