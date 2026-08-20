@@ -3,7 +3,6 @@
  * * Architecture Layer: Utility / Hardware Abstraction
  * Responsibility: Provides fundamental bit manipulation macros and functions for embedded systems.
  */
-
 #pragma once
 #include <cstdint>
 

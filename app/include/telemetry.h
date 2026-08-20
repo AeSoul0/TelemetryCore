@@ -3,7 +3,6 @@
  * * Architecture Layer: Domain / Processing
  * Responsibility: Defines the telemetry data model and the processor interface that evaluates sensor readings.
  */
-
 #pragma once
 #include <cstdint>
 #include <string>

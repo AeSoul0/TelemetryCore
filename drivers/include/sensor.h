@@ -3,7 +3,6 @@
  * * Architecture Layer: Domain / Sensor Abstraction
  * Responsibility: Defines the abstract interface for temperature sensors and provides a simulated implementation for testing.
  */
-
 #pragma once
 #include <cstdint>
 
