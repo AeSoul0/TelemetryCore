@@ -1,0 +1,2 @@
+# Only needed to read a real serial port (--port). --stdin and --replay use the standard library.
+pyserial>=3.5
