@@ -13,3 +13,7 @@ lib/
 # Project specific files to ignore
 roadmap.md
 session_log.md
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,57 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": { "CMAKE_EXPORT_COMPILE_COMMANDS": "ON" }
+    },
+    {
+      "name": "host-debug",
+      "inherits": "base",
+      "displayName": "PC simulation + unit tests (Debug)",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "TELEMETRY_BUILD_TESTS": "ON" }
+    },
+    {
+      "name": "host-release",
+      "inherits": "base",
+      "displayName": "PC simulation (Release)",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release", "TELEMETRY_BUILD_TESTS": "OFF" }
+    },
+    {
+      "name": "stm32-base",
+      "hidden": true,
+      "inherits": "base",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-arm-none-eabi.cmake"
+    },
+    {
+      "name": "stm32-debug",
+      "inherits": "stm32-base",
+      "displayName": "NUCLEO-F446RE firmware (Debug, -Og)",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "stm32-release",
+      "inherits": "stm32-base",
+      "displayName": "NUCLEO-F446RE firmware (Release, -Os)",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "MinSizeRel", "TELEMETRY_LOG_LEVEL": "1" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "host-debug", "configurePreset": "host-debug" },
+    { "name": "host-release", "configurePreset": "host-release" },
+    { "name": "stm32-debug", "configurePreset": "stm32-debug" },
+    { "name": "stm32-release", "configurePreset": "stm32-release" }
+  ],
+  "testPresets": [
+    {
+      "name": "host-debug",
+      "configurePreset": "host-debug",
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error" }
+    }
+  ]
+}

@@ -1,4 +1,58 @@
-Checks: '*, -llvm-header-guard, -cppcoreguidelines-pro-type-vararg, -hicpp-vararg'
-WarningsAsErrors: ''
-HeaderFilterRegex: '.*'
+# Static analysis profile for TelemetryCore.
+# Disabled checks conflict with deliberate embedded design choices:
+#   - pro-type-vararg / vararg:            printf-style logger (no iostream on the MCU)
+#   - avoid-c-arrays, pointer-arithmetic,
+#     array-to-pointer-decay, reinterpret: fixed byte buffers handed to the UART / queues
+#   - avoid-non-const-global-variables:    statically allocated RTOS objects (zero-heap policy)
+#   - macro-usage, avoid-do-while:         LOG_* macros (compile-time filtering, __FILE__-free)
+#   - magic-numbers, identifier-length:    register-level constants and short loop names
+#   - err58-cpp:                           no exceptions in this code base (-fno-exceptions)
+#   - avoid-const-or-ref-data-members:     drivers are injected by reference (they outlive the user)
+#   - uppercase-literal-suffix, nodiscard,
+#     const-correctness:                   style rules not used by this code base
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  cert-*,
+  -cert-err58-cpp,
+  -cert-dcl50-cpp,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-const-or-ref-data-members,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-vararg,
+  hicpp-multiway-paths-covered,
+  misc-*,
+  -misc-const-correctness,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  modernize-*,
+  -modernize-avoid-c-arrays,
+  -modernize-use-nodiscard,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  portability-*,
+  readability-*,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-function-cognitive-complexity,
+  -readability-uppercase-literal-suffix
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*/(app|platform|drivers|bsp)/.*'
 FormatStyle: none
+CheckOptions:
+  - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctionsWhenCopyIsDeleted
+    value: true
+  - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: true
+  - key: readability-implicit-bool-conversion.AllowPointerConditions
+    value: true
